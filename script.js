@@ -2,6 +2,7 @@ let firstNumber;
 let secoundNumber;
 let operator;
 let result;
+const buttons = Array.from(document.querySelectorAll('button'));
 const btn = Array.from(document.querySelectorAll('.number'));
 const operators = Array.from(document.querySelectorAll('.operate'));
 const display = document.getElementById('display');
@@ -23,40 +24,68 @@ function divide(a,b) {
 
 function operate(operator,a,b) {
     if(operator == 'add') {
+        resetDisplay()
         return add(a,b);
     }
     if(operator == 'subtract') {
+        resetDisplay()
         return subtract(a,b);
     }
     if(operator == 'multiply') {
+        resetDisplay()
         return multiply(a,b);
     }
     if(operator == 'divide') {
         if(a == 0 || b == 0) {
-            return "ERROR";
+            return "0";
         } else {
+            resetDisplay()
             return divide(a,b);
         }
     }
 }
 
+function resetDisplay() {
+    buttons.forEach(button => button.addEventListener("click", resetDisplayDetect),true);
+}
+
+function resetDisplayDetect() {
+    display.innerText = '';
+    buttons.forEach(button => button.removeEventListener("click", resetDisplayDetect),true);
+}
+
+
 function changeDisplay() {
+    if(this.textContent == "0" && display.innerText == '' && operator === undefined) { //Check if first number is 0
+        return false;
+    }
     display.innerText = display.innerText + this.textContent;
 }
 
 function saveOperator() {
+    if(display.innerText == '' || display.innerText =='0') { //Prevent clicking multiple signs
+        return false;
+    }
     firstNumber = display.innerText;
     operator = this.id;
     display.innerText = '';
 }
 
-function doMath() {
-    secoundNumber = display.innerText;
-    result = operate(operator, Number(firstNumber), Number(secoundNumber));
-    display.innerText = result;
+function clearText() {
+    display.innerText = display.innerText.slice(0, -1); //Clear function
 }
 
-clear.addEventListener('click', () => display.innerText = '');
+function doMath() {
+    secoundNumber = display.innerText;
+    if(secoundNumber === '') { //Secound number can't be null
+        return false;
+    }
+    display.innerText = operate(operator, Number(firstNumber), Number(secoundNumber));
+    firstNumber = 0;
+    secoundNumber = 0;
+}
+
+clear.addEventListener('click', clearText);
 btn.forEach(button => button.addEventListener("click", changeDisplay));
 operators.forEach(operator => operator.addEventListener("click", saveOperator));
 equal.addEventListener("click", doMath);
