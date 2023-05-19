@@ -8,6 +8,7 @@ const operators = Array.from(document.querySelectorAll('.operate'));
 const display = document.getElementById('display');
 const clear = document.getElementById('clear');
 const equal = document.getElementById('doMath');
+const point = document.getElementById("point");
 
 function add(a,b) {
     return a+b;
@@ -56,16 +57,14 @@ function resetDisplayDetect() {
 
 
 function changeDisplay() {
-    if(this.textContent == "0" && display.innerText == '' && operator === undefined) { //Check if first number is 0
-        return false;
-    }
+    if(this.textContent == "0" && display.innerText == '' && operator === undefined) return false; //Check if first number is 0
+    if(this.textContent == '.' && display.innerText.includes('.')) return false;
+    if(this.textContent == '.' && display.innerText == '') display.innerText = 0.;
     display.innerText = display.innerText + this.textContent;
 }
 
 function saveOperator() {
-    if(display.innerText == '' || display.innerText =='0') { //Prevent clicking multiple signs
-        return false;
-    }
+    if(display.innerText == '' || display.innerText =='0') return false; //Prevent clicking multiple signs
     firstNumber = display.innerText;
     operator = this.id;
     display.innerText = '';
@@ -85,6 +84,7 @@ function doMath() {
     secoundNumber = 0;
 }
 
+point.addEventListener('click', changeDisplay);
 clear.addEventListener('click', clearText);
 btn.forEach(button => button.addEventListener("click", changeDisplay));
 operators.forEach(operator => operator.addEventListener("click", saveOperator));

@@ -26,6 +26,10 @@ aside {
     
 }
 
+aside button {
+    height: 62px;
+}
+
 button {
     width: 100px;
     height: 80px;
